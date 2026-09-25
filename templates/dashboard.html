@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Expense Tracker AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #222;
+        }
+
+        .header {
+            background: #4f46e5;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 25px;
+        }
+
+        .header p {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .profile {
+            background: white;
+            color: #4f46e5;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .section,
+        .budget-box,
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .budget-box {
+            margin-bottom: 25px;
+        }
+
+        .budget-box h2,
+        .section h2 {
+            margin-bottom: 15px;
+        }
+
+        .budget-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .budget-input input {
+            padding: 12px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .amount {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .spent {
+            color: #ef4444;
+        }
+
+        .remaining {
+            color: #16a34a;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .category {
+            margin-bottom: 18px;
+        }
+
+        .category-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .progress {
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #4f46e5;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .ai-box {
+            background: #eef2ff;
+            border-left: 5px solid #4f46e5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ai-box h3 {
+            color: #4f46e5;
+            margin-bottom: 8px;
+        }
+
+        .saving-box {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .saving-box input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .saving-progress {
+            height: 12px;
+            background: #dcfce7;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .saving-bar {
+            height: 100%;
+            width: 0%;
+            background: #16a34a;
+            transition: width 0.5s;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #eef2ff;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        @media(max-width: 800px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .budget-input {
+                flex-direction: column;
+            }
+
+            .budget-input input {
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div>
+
+        <h1>🎓 Student Expense Tracker AI</h1>
+
+        <p>
+            Track expenses • Control spending • Save smarter
+        </p>
+
+    </div>
+
+    <div class="profile">
+        👤 Student
+    </div>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- MONTHLY BUDGET -->
+
+<div class="budget-box">
+
+    <h2>💰 Set Your Monthly Budget</h2>
+
+    <p>
+        Enter your monthly pocket money, scholarship,
+        salary or available budget.
+    </p>
+
+    <div class="budget-input">
+
+        <input
+            type="number"
+            id="budget"
+            placeholder="Example: 5000"
+            min="1"
+        >
+
+        <button
+            type="button"
+            onclick="setBudget()">
+
+            Set Budget
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- SUMMARY CARDS -->
+
+<div class="cards">
+
+    <div class="card">
+
+        <h3>💰 Monthly Budget</h3>
+
+        <div
+            class="amount"
+            id="budgetDisplay">
+
+            ₹0
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>💸 Total Spent</h3>
+
+        <div
+            class="amount spent"
+            id="spentDisplay">
+
+            ₹0
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>💵 Remaining</h3>
+
+        <div
+            class="amount remaining"
+            id="remainingDisplay">
+
+            ₹0
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ADD EXPENSE + CATEGORY -->
+
+<div class="two-columns">
+
+
+<!-- ADD EXPENSE -->
+
+<div class="section">
+
+    <h2>➕ Add Expense</h2>
+
+    <form action="/add_expense" method="POST">
+
+        <div class="form-group">
+
+            <label>Expense Name</label>
+
+            <input
+                type="text"
+                name="expense_name"
+                placeholder="Example: College Canteen Lunch"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Amount (₹)</label>
+
+            <input
+                type="number"
+                name="amount"
+                placeholder="Example: 80"
+                min="1"
+                step="0.01"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Category</label>
+
+            <select name="category" required>
+
+                <option value="Food">🍔 Food</option>
+
+                <option value="Transport">🚌 Transport</option>
+
+                <option value="Petrol / Fuel">⛽ Petrol / Fuel</option>
+
+                <option value="College">🎓 College Expenses</option>
+
+                <option value="Books & Stationery">
+                    📚 Books & Stationery
+                </option>
+
+                <option value="Shopping">🛍️ Shopping</option>
+
+                <option value="Hostel / Rent">
+                    🏠 Hostel / Rent
+                </option>
+
+                <option value="Entertainment">
+                    🎬 Entertainment
+                </option>
+
+                <option value="Health / Medicine">
+                    💊 Health / Medicine
+                </option>
+
+                <option value="Mobile / Internet">
+                    📱 Mobile / Internet
+                </option>
+
+                <option value="Emergency">
+                    🚨 Emergency
+                </option>
+
+                <option value="Other">
+                    📦 Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Payment Method</label>
+
+            <select name="payment_method" required>
+
+                <option value="UPI">📱 UPI</option>
+
+                <option value="Cash">💵 Cash</option>
+
+                <option value="Debit Card">💳 Debit Card</option>
+
+                <option value="Bank Transfer">
+                    🏦 Bank Transfer
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button type="submit">
+            Add Expense
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- CATEGORY ANALYSIS -->
+
+<div class="section">
+
+    <h2>📊 Spending by Category</h2>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>🍔 Food</span>
+            <span id="FoodAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="FoodBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>🚌 Transport</span>
+            <span id="TransportAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="TransportBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>⛽ Petrol / Fuel</span>
+            <span id="PetrolAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="PetrolBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>🎓 College</span>
+            <span id="CollegeAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="CollegeBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>📚 Books & Stationery</span>
+            <span id="BooksAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="BooksBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>🛍️ Shopping</span>
+            <span id="ShoppingAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="ShoppingBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>🏠 Hostel / Rent</span>
+            <span id="HostelAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="HostelBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="category">
+
+        <div class="category-title">
+            <span>🎬 Entertainment</span>
+            <span id="EntertainmentAmount">₹0</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="EntertainmentBar"></div>
+        </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+<!-- AI INSIGHTS -->
+
+<div class="section" style="margin-bottom:25px;">
+
+    <h2>🤖 AI Spending Insights</h2>
+
+
+    <div class="ai-box">
+
+        <h3>💡 Smart Analysis</h3>
+
+        <p id="aiMessage">
+
+            Set your monthly budget and add expenses
+            to receive spending insights.
+
+        </p>
+
+    </div>
+
+
+    <div class="ai-box">
+
+        <h3>📈 Budget Prediction</h3>
+
+        <p id="prediction">
+
+            Your budget analysis will appear here.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- SAVINGS GOAL -->
+
+<div class="section" style="margin-bottom:25px;">
+
+    <h2>🎯 Savings Goal</h2>
+
+    <div class="saving-box">
+
+        <p style="margin-bottom:15px;">
+            Save money for something you want.
+        </p>
+
+
+        <input
+            type="text"
+            id="goalName"
+            placeholder="Example: New Headphones"
+        >
+
+
+        <input
+            type="number"
+            id="goalAmount"
+            placeholder="Target Amount ₹"
+            min="1"
+        >
+
+
+        <input
+            type="number"
+            id="savedAmount"
+            placeholder="Amount Saved ₹"
+            min="0"
+        >
+
+
+        <button
+            type="button"
+            onclick="setGoal()">
+
+            Set Savings Goal
+
+        </button>
+
+
+        <p
+            id="goalMessage"
+            style="margin-top:15px;">
+        </p>
+
+
+        <div class="saving-progress">
+
+            <div
+                class="saving-bar"
+                id="savingBar">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- EXPENSE HISTORY -->
+
+<div class="section">
+
+    <h2>📋 Expense History</h2>
+
+
+    {% if expenses %}
+
+    <div class="table-container">
+
+        <table>
+
+            <tr>
+
+                <th>Date</th>
+
+                <th>Expense Name</th>
+
+                <th>Category</th>
+
+                <th>Amount</th>
+
+                <th>Payment</th>
+
+            </tr>
+
+
+            {% for expense in expenses %}
+
+            <tr>
+
+                <td>
+                    {{ expense[4] }}
+                </td>
+
+                <td>
+                    {{ expense[0] }}
+                </td>
+
+                <td>
+                    {{ expense[2] }}
+                </td>
+
+                <td>
+                    ₹{{ "%.2f"|format(expense[1]) }}
+                </td>
+
+                <td>
+                    {{ expense[3] }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <p>
+        No expenses added yet.
+    </p>
+
+    {% endif %}
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   GET EXPENSES FROM FLASK
+========================================== */
+
+const expenses = {{ expenses | tojson }};
+
+
+/* ==========================================
+   CATEGORY TOTALS
+========================================== */
+
+let categoryTotals = {
+
+    "Food": 0,
+
+    "Transport": 0,
+
+    "Petrol / Fuel": 0,
+
+    "College": 0,
+
+    "Books & Stationery": 0,
+
+    "Shopping": 0,
+
+    "Hostel / Rent": 0,
+
+    "Entertainment": 0,
+
+    "Health / Medicine": 0,
+
+    "Mobile / Internet": 0,
+
+    "Emergency": 0,
+
+    "Other": 0
+
+};
+
+
+/* ==========================================
+   CALCULATE TOTAL SPENDING
+========================================== */
+
+let totalSpent = 0;
+
+
+expenses.forEach(function(expense) {
+
+    let amount = Number(expense[1]);
+
+    let category = expense[2];
+
+    totalSpent += amount;
+
+
+    if (categoryTotals[category] !== undefined) {
+
+        categoryTotals[category] += amount;
+
+    }
+
+});
+
+
+/* ==========================================
+   LOAD BUDGET
+========================================== */
+
+let budgetAmount =
+    Number(localStorage.getItem("studentBudget")) || 0;
+
+
+/* ==========================================
+   SET BUDGET
+========================================== */
+
+function setBudget() {
+
+    let budget =
+        Number(document.getElementById("budget").value);
+
+
+    if (budget <= 0) {
+
+        alert("Please enter a valid monthly budget.");
+
+        return;
+
+    }
+
+
+    budgetAmount = budget;
+
+
+    localStorage.setItem(
+        "studentBudget",
+        budgetAmount
+    );
+
+
+    updateDashboard();
+
+
+    alert("Monthly budget set successfully!");
+
+}
+
+
+/* ==========================================
+   UPDATE DASHBOARD
+========================================== */
+
+function updateDashboard() {
+
+    document.getElementById("budgetDisplay").innerText =
+        "₹" + budgetAmount.toFixed(2);
+
+
+    document.getElementById("spentDisplay").innerText =
+        "₹" + totalSpent.toFixed(2);
+
+
+    let remaining =
+        budgetAmount - totalSpent;
+
+
+    document.getElementById("remainingDisplay").innerText =
+        "₹" + remaining.toFixed(2);
+
+
+    if (remaining < 0) {
+
+        document.getElementById("remainingDisplay").style.color =
+            "#ef4444";
+
+    }
+    else {
+
+        document.getElementById("remainingDisplay").style.color =
+            "#16a34a";
+
+    }
+
+
+    updateCategories();
+
+    generateAI();
+
+}
+
+
+/* ==========================================
+   CATEGORY ANALYSIS
+========================================== */
+
+function updateCategory(category, amountID, barID) {
+
+    let amount =
+        categoryTotals[category] || 0;
+
+
+    document.getElementById(amountID).innerText =
+        "₹" + amount.toFixed(2);
+
+
+    let percentage = 0;
+
+
+    if (totalSpent > 0) {
+
+        percentage =
+            (amount / totalSpent) * 100;
+
+    }
+
+
+    document.getElementById(barID).style.width =
+        percentage + "%";
+
+}
+
+
+function updateCategories() {
+
+    updateCategory(
+        "Food",
+        "FoodAmount",
+        "FoodBar"
+    );
+
+
+    updateCategory(
+        "Transport",
+        "TransportAmount",
+        "TransportBar"
+    );
+
+
+    updateCategory(
+        "Petrol / Fuel",
+        "PetrolAmount",
+        "PetrolBar"
+    );
+
+
+    updateCategory(
+        "College",
+        "CollegeAmount",
+        "CollegeBar"
+    );
+
+
+    updateCategory(
+        "Books & Stationery",
+        "BooksAmount",
+        "BooksBar"
+    );
+
+
+    updateCategory(
+        "Shopping",
+        "ShoppingAmount",
+        "ShoppingBar"
+    );
+
+
+    updateCategory(
+        "Hostel / Rent",
+        "HostelAmount",
+        "HostelBar"
+    );
+
+
+    updateCategory(
+        "Entertainment",
+        "EntertainmentAmount",
+        "EntertainmentBar"
+    );
+
+}
+
+
+/* ==========================================
+   AI SPENDING ANALYSIS
+========================================== */
+
+function generateAI() {
+
+    let message =
+        document.getElementById("aiMessage");
+
+
+    let prediction =
+        document.getElementById("prediction");
+
+
+    /* No budget */
+
+    if (budgetAmount <= 0) {
+
+        message.innerText =
+            "💡 Please set your monthly budget to get personalized AI spending analysis.";
+
+        prediction.innerText =
+            "📊 Budget prediction will appear after you set your monthly budget.";
+
+        return;
+
+    }
+
+
+    /* No expenses */
+
+    if (expenses.length === 0) {
+
+        message.innerText =
+            "✅ Your budget is ready. Add some expenses and AI will analyze your spending.";
+
+        prediction.innerText =
+            "📈 Add expenses to generate a month-end spending prediction.";
+
+        return;
+
+    }
+
+
+    /* Spending percentage */
+
+    let percentage =
+        (totalSpent / budgetAmount) * 100;
+
+
+    /* Highest category */
+
+    let highestCategory = "None";
+
+    let highestAmount = 0;
+
+
+    for (let category in categoryTotals) {
+
+        if (
+            categoryTotals[category]
+            > highestAmount
+        ) {
+
+            highestAmount =
+                categoryTotals[category];
+
+            highestCategory =
+                category;
+
+        }
+
+    }
+
+
+    let highestCategoryPercentage = 0;
+
+
+    if (totalSpent > 0) {
+
+        highestCategoryPercentage =
+            (highestAmount / totalSpent) * 100;
+
+    }
+
+
+    /* AI MESSAGE */
+
+    if (totalSpent > budgetAmount) {
+
+        message.innerText =
+            "🚨 ALERT: You have exceeded your monthly budget by ₹"
+            + (totalSpent - budgetAmount).toFixed(2)
+            + ". Your highest spending category is "
+            + highestCategory
+            + ".";
+
+    }
+
+    else if (percentage >= 90) {
+
+        message.innerText =
+            "⚠️ WARNING: You have already used "
+            + percentage.toFixed(1)
+            + "% of your monthly budget. Your highest spending category is "
+            + highestCategory
+            + ".";
+
+    }
+
+    else if (percentage >= 70) {
+
+        message.innerText =
+            "⚠️ You have used "
+            + percentage.toFixed(1)
+            + "% of your budget. Watch your spending, especially on "
+            + highestCategory
+            + ".";
+
+    }
+
+    else {
+
+        message.innerText =
+            "🤖 AI Insight: Your highest spending category is "
+            + highestCategory
+            + " at ₹"
+            + highestAmount.toFixed(2)
+            + ", which is "
+            + highestCategoryPercentage.toFixed(1)
+            + "% of your total spending.";
+
+    }
+
+
+    /* Month-end prediction */
+
+    let today = new Date();
+
+    let dayOfMonth =
+        today.getDate();
+
+
+    let daysInMonth =
+        new Date(
+            today.getFullYear(),
+            today.getMonth() + 1,
+            0
+        ).getDate();
+
+
+    let dailyAverage =
+        totalSpent / dayOfMonth;
+
+
+    let predictedSpending =
+        dailyAverage * daysInMonth;
+
+
+    let remaining =
+        budgetAmount - totalSpent;
+
+
+    if (predictedSpending > budgetAmount) {
+
+        let expectedExtra =
+            predictedSpending - budgetAmount;
+
+
+        prediction.innerText =
+            "📈 Based on your current spending rate, AI predicts that you may spend approximately ₹"
+            + predictedSpending.toFixed(2)
+            + " this month. You may exceed your budget by around ₹"
+            + expectedExtra.toFixed(2)
+            + ".";
+
+    }
+
+    else {
+
+        prediction.innerText =
+            "📈 Based on your current spending rate, AI predicts approximately ₹"
+            + predictedSpending.toFixed(2)
+            + " total spending this month. You are currently likely to stay within your budget with ₹"
+            + Math.max(remaining, 0).toFixed(2)
+            + " remaining.";
+
+    }
+
+
+    /* Category warning */
+
+    if (
+        highestCategoryPercentage >= 50
+        &&
+        totalSpent > 0
+    ) {
+
+        message.innerText +=
+            " 💡 More than half of your spending is going toward "
+            + highestCategory
+            + ". Consider reducing unnecessary expenses in this category.";
+
+    }
+
+}
+
+
+/* ==========================================
+   SAVINGS GOAL
+========================================== */
+
+function setGoal() {
+
+    let goalName =
+        document.getElementById("goalName").value.trim();
+
+
+    let goalAmount =
+        Number(
+            document.getElementById("goalAmount").value
+        );
+
+
+    let savedAmount =
+        Number(
+            document.getElementById("savedAmount").value
+        );
+
+
+    if (
+        goalName === ""
+        ||
+        goalAmount <= 0
+    ) {
+
+        alert("Please enter a valid savings goal.");
+
+        return;
+
+    }
+
+
+    if (savedAmount < 0) {
+
+        savedAmount = 0;
+
+    }
+
+
+    let percentage =
+        (savedAmount / goalAmount) * 100;
+
+
+    if (percentage > 100) {
+
+        percentage = 100;
+
+    }
+
+
+    document.getElementById("goalMessage").innerText =
+        "🎯 "
+        + goalName
+        + " | Saved ₹"
+        + savedAmount.toFixed(2)
+        + " of ₹"
+        + goalAmount.toFixed(2);
+
+
+    document.getElementById("savingBar").style.width =
+        percentage + "%";
+
+}
+
+
+/* ==========================================
+   RUN WHEN PAGE OPENS
+========================================== */
+
+updateDashboard();
+
+</script>
+
+
+</body>
+
+</html>
