@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker AI</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f7ff, #eeeeff);
+            color: #172554;
+            overflow-x: hidden;
+        }
+
+        /* ---------- BACKGROUND CIRCLES ---------- */
+
+        .circle {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.12);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle.one {
+            width: 180px;
+            height: 180px;
+            left: -80px;
+            top: 150px;
+        }
+
+        .circle.two {
+            width: 220px;
+            height: 220px;
+            right: -100px;
+            bottom: 50px;
+            animation-delay: 2s;
+        }
+
+        .circle.three {
+            width: 100px;
+            height: 100px;
+            right: 30%;
+            top: 100px;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* ---------- NAVBAR ---------- */
+
+        nav {
+            width: 90%;
+            max-width: 1250px;
+            margin: auto;
+            padding: 28px 0;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .logo span {
+            color: #6938ef;
+        }
+
+        .logo-icon {
+            display: inline-flex;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+            color: white;
+            border-radius: 12px;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+
+            animation: logoPulse 2s infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #172554;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6d28d9;
+            transform: translateY(-2px);
+        }
+
+        /* ---------- HERO ---------- */
+
+        .hero {
+            width: 90%;
+            max-width: 1250px;
+            margin: 45px auto 70px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .hero-left {
+            animation: slideLeft 1s ease;
+        }
+
+        @keyframes slideLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .small-title {
+            display: inline-block;
+            background: #ebe5ff;
+            color: #6634df;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            line-height: 1.05;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: #6938ef;
+        }
+
+        .hero p {
+            font-size: 19px;
+            line-height: 1.7;
+            color: #64748b;
+            max-width: 560px;
+            margin-bottom: 30px;
+        }
+
+        /* ---------- BUTTONS ---------- */
+
+        .buttons {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 16px 28px;
+            border-radius: 13px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #6128e8, #7c3aed);
+            color: white;
+            box-shadow: 0 10px 25px rgba(99, 55, 230, 0.25);
+        }
+
+        .register-btn {
+            background: white;
+            color: #6032db;
+            border: 2px solid #b7a4ff;
+        }
+
+        .dashboard-btn {
+            background: white;
+            color: #172554;
+            border: 2px solid #b7a4ff;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(99, 55, 230, 0.25);
+        }
+
+        /* ---------- HERO ILLUSTRATION ---------- */
+
+        .hero-right {
+            position: relative;
+            min-height: 480px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            animation: slideRight 1s ease;
+        }
+
+        @keyframes slideRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .student-card {
+            width: 430px;
+            height: 350px;
+            background: linear-gradient(145deg, #ddd6fe, #c4b5fd);
+            border-radius: 40px;
+            position: relative;
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+
+            box-shadow: 0 25px 50px rgba(88, 62, 170, 0.2);
+        }
+
+        .student {
+            font-size: 160px;
+            margin-bottom: 25px;
+            animation: studentFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes studentFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .laptop {
+            position: absolute;
+            bottom: 35px;
+            width: 220px;
+            height: 125px;
+            background: #1e293b;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #c4b5fd;
+            font-size: 35px;
+        }
+
+        .book {
+            position: absolute;
+            left: 15px;
+            bottom: 20px;
+            font-size: 55px;
+        }
+
+        .plant {
+            position: absolute;
+            right: 15px;
+            bottom: 20px;
+            font-size: 65px;
+        }
+
+        /* ---------- FLOATING CARDS ---------- */
+
+        .info-card {
+            position: absolute;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(40, 30, 100, 0.15);
+            font-weight: bold;
+            animation: cardFloat 4s ease-in-out infinite;
+        }
+
+        .budget-card {
+            top: 20px;
+            left: 10px;
+        }
+
+        .chart-card {
+            top: 50px;
+            right: 0;
+            animation-delay: 1s;
+        }
+
+        .ai-card {
+            right: 10px;
+            bottom: 90px;
+            animation-delay: 2s;
+            color: #6032db;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        /* ---------- FEATURES ---------- */
+
+        .features {
+            width: 90%;
+            max-width: 1250px;
+            margin: auto;
+
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+
+            padding-bottom: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 20px;
+
+            box-shadow: 0 10px 30px rgba(60, 50, 120, 0.08);
+
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(60, 50, 120, 0.15);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: white;
+            font-size: 23px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: #172554;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        /* ---------- FOOTER ---------- */
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+
+        @media (max-width: 1000px) {
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-left p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .buttons {
+                justify-content: center;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-right {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .student-card {
+                width: 320px;
+                height: 280px;
+            }
+
+            .student {
+                font-size: 120px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .info-card {
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Background decorations -->
+    <div class="circle one"></div>
+    <div class="circle two"></div>
+    <div class="circle three"></div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav>
+
+        <div class="logo">
+            <span class="logo-icon">💰</span>
+            Expense Tracker <span>AI</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/login">👤 Login</a>
+            <a href="/register">👤 Register</a>
+        </div>
+
+    </nav>
+
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-left">
+
+            <div class="small-title">
+                ✨ Smart Spending &nbsp;•&nbsp; Better Future
+            </div>
+
+            <h1>
+                Expense Tracker <span>AI</span>
+            </h1>
+
+            <p>
+                Manage your expenses easily and intelligently.
+                Track your daily spending, set your budget,
+                get AI insights and achieve your savings goals —
+                all in one place.
+            </p>
+
+
+            <div class="buttons">
+
+                <a href="/login" class="btn login-btn">
+                    👤 Login &nbsp; →
+                </a>
+
+                <a href="/register" class="btn register-btn">
+                    👤 Register &nbsp; →
+                </a>
+
+                <a href="/dashboard" class="btn dashboard-btn">
+                    ▦ Dashboard &nbsp; →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="hero-right">
+
+            <div class="student-card">
+
+                <div class="book">
+                    📚
+                </div>
+
+                <div class="student">
+                    👩🏻‍🎓
+                </div>
+
+                <div class="laptop">
+                    💻
+                </div>
+
+                <div class="plant">
+                    🌿
+                </div>
+
+            </div>
+
+
+            <!-- Floating cards -->
+
+            <div class="info-card budget-card">
+                💰 Monthly Budget<br>
+                ₹1,500
+            </div>
+
+            <div class="info-card chart-card">
+                📊 Spending
+            </div>
+
+            <div class="info-card ai-card">
+                🤖 AI Insight<br>
+                Stay on track!
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="features">
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                💳
+            </div>
+
+            <h3>Track Expenses</h3>
+
+            <p>
+                Add and manage your daily expenses easily.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📊
+            </div>
+
+            <h3>Smart Analysis</h3>
+
+            <p>
+                Get AI-powered insights on your spending.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📈
+            </div>
+
+            <h3>Budget Prediction</h3>
+
+            <p>
+                Know if you may exceed your monthly budget.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🎯
+            </div>
+
+            <h3>Savings Goal</h3>
+
+            <p>
+                Save money for your goals step by step.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🎓
+            </div>
+
+            <h3>Student Focused</h3>
+
+            <p>
+                Designed especially for college students.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+        © 2026 Expense Tracker AI | Smart Spending for Students
+    </footer>
+
+
+</body>
+</html>

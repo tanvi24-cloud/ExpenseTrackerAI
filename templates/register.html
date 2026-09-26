@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Expense Tracker AI</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            overflow: hidden;
+
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed,
+                #9333ea
+            );
+
+        }
+
+        /* Floating circles */
+
+        .circle {
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.12);
+
+            animation: float 7s infinite ease-in-out;
+
+        }
+
+        .circle1 {
+
+            width: 180px;
+            height: 180px;
+
+            top: 5%;
+            left: 8%;
+
+        }
+
+        .circle2 {
+
+            width: 250px;
+            height: 250px;
+
+            bottom: -80px;
+            right: 7%;
+
+            animation-delay: 2s;
+
+        }
+
+        .circle3 {
+
+            width: 100px;
+            height: 100px;
+
+            top: 55%;
+            right: 18%;
+
+            animation-delay: 4s;
+
+        }
+
+        @keyframes float {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+
+        }
+
+        /* Register card */
+
+        .register-card {
+
+            position: relative;
+
+            z-index: 2;
+
+            width: 420px;
+
+            padding: 38px;
+
+            background: rgba(255,255,255,0.95);
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.25);
+
+            animation: appear 0.8s ease;
+
+        }
+
+        @keyframes appear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(40px)
+                    scale(0.95);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+        .logo {
+
+            width: 65px;
+            height: 65px;
+
+            margin: auto;
+
+            margin-bottom: 15px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 30px;
+
+            background: #eef2ff;
+
+            animation: pulse 2s infinite;
+
+        }
+
+        @keyframes pulse {
+
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+        }
+
+        h1 {
+
+            text-align: center;
+
+            color: #4f46e5;
+
+            margin-bottom: 8px;
+
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #666;
+
+            font-size: 14px;
+
+            margin-bottom: 25px;
+
+        }
+
+        .form-group {
+
+            margin-bottom: 16px;
+
+        }
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #333;
+
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 2px solid #e5e7eb;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.3s;
+
+        }
+
+        input:focus {
+
+            border-color: #4f46e5;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(79,70,229,0.12);
+
+            transform: translateY(-2px);
+
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #4f46e5;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            margin-top: 5px;
+
+        }
+
+        button:hover {
+
+            background: #3730a3;
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 10px 20px
+                rgba(79,70,229,0.3);
+
+        }
+
+        .links {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            font-size: 14px;
+
+        }
+
+        .links a {
+
+            color: #4f46e5;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 12px;
+
+            color: #777;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+        }
+
+        @media(max-width: 450px) {
+
+            .register-card {
+
+                width: 90%;
+
+                padding: 30px 25px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- Animated background -->
+
+<div class="circle circle1"></div>
+
+<div class="circle circle2"></div>
+
+<div class="circle circle3"></div>
+
+
+<!-- Register Card -->
+
+<div class="register-card">
+
+
+    <div class="logo">
+        🎓
+    </div>
+
+
+    <h1>Create Account</h1>
+
+
+    <p class="subtitle">
+        Start managing your student expenses smarter
+    </p>
+
+
+    <form method="POST">
+
+
+        <div class="form-group">
+
+            <label>Name</label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                required
+            >
+
+        </div>
+
+
+        <button type="submit">
+            Create Account →
+        </button>
+
+
+    </form>
+
+
+    <div class="links">
+
+        Already have an account?
+
+        <a href="/login">
+            Login
+        </a>
+
+    </div>
+
+
+    <a class="back" href="/">
+        ← Back to Home
+    </a>
+
+
+</div>
+
+
+</body>
+
+</html>
